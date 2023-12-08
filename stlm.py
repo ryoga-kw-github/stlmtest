@@ -1,4 +1,7 @@
 import streamlit as st
+from langchain.chat_models import ChatOpenAI
+
+llm = ChatOpenAI(temperature=1,model_name="gpt-3.5-turbo-1106")
 
 def chat_ui():
     st.title("シンプルなチャットUI")
@@ -14,7 +17,7 @@ def chat_ui():
     # ユーザーがメッセージを入力したらオウム返し
     if st.button("送信"):
         st.session_state.messages.append(("User", user_input))
-        bot_res = user_input + "!!"
+        bot_res = llm.predict(user_input)
         st.session_state.messages.append(("Bot", bot_res))  # オウム返しも追加
 
     # メッセージ表示
