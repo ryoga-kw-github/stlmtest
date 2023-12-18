@@ -31,7 +31,7 @@ if user_input:
     for message in memory.load_memory_variables({})["history"]:
         if isinstance(message, HumanMessage):
             with st.chat_message("user"):
-                st.write(message.content+"!!!")
+                st.write(message.content)
         elif isinstance(message, AIMessage):
             with st.chat_message("ai"):
-                st.write(message.content+"!!!")
+                st.write(message.content)
