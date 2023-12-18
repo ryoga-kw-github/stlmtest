@@ -1,34 +1,37 @@
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
 
+from langchain.chat_models import ChatOpenAI
+from langchain.memory import ConversationBufferWindowMemory
+from langchain.chains import ConversationChain
+from langchain.schema import HumanMessage
+from langchain.schema import AIMessage
+
+# memoryオブジェクトをキャッシュする関数を定義
+@st.cache(allow_output_mutation=True)
+def get_memory():
+    return ConversationBufferWindowMemory(k=5, return_messages=True)
+
+# キャッシュされたmemoryオブジェクトを取得
+memory = get_memory()
+
 llm = ChatOpenAI(temperature=1,model_name="gpt-3.5-turbo-1106")
 
-def chat_ui():
-    st.title("シンプルなチャットUI")
+conversation = ConversationChain(
+    llm=llm, 
+    memory=memory
+)
 
-    # セッション状態を初期化
-    if 'messages' not in st.session_state:
-        st.session_state.messages = []
+st.title("シンプルなチャットUI")
 
-    # チャットボックス
-    user_input = st.text_input("メッセージを入力してね")
-    bot_output = ""; #OpenAI APIのレスポンスを格納する
-
-    # ユーザーがメッセージを入力したらオウム返し
-    if st.button("送信"):
-        st.session_state.messages.append(("User", user_input))
-        bot_res = llm.predict(user_input)
-        st.session_state.messages.append(("Bot", bot_res))  # オウム返しも追加
-
-    # メッセージ表示
-    for sender, message in st.session_state.messages:
-        st.write(f"{sender}:")
-        if sender == "User":
-            st.info(message)  # ユーザーのメッセージを枠で囲む
-        else:
-            st.success(message)  # オウムのメッセージを別の色で囲む
-
-        #st.write(st.session_state.messages)
-
-if __name__ == '__main__':
-    chat_ui()
+# チャットボックス
+user_input = st.chat_input("Say something")
+if user_input:
+    #response = conversation.predict(input=user_input)
+    for message in memory.load_memory_variables({})["history"]:
+        if isinstance(message, HumanMessage):
+            with st.chat_message("user"):
+                st.write(message.content+"!!!")
+        elif isinstance(message, AIMessage):
+            with st.chat_message("ai"):
+                st.write(message.content+"!!!")
