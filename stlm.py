@@ -27,7 +27,7 @@ st.title("シンプルなチャットUI")
 # チャットボックス
 user_input = st.chat_input("Say something")
 if user_input:
-    #response = conversation.predict(input=user_input)
+    response = conversation.predict(input=user_input)
     for message in memory.load_memory_variables({})["history"]:
         if isinstance(message, HumanMessage):
             with st.chat_message("user"):
