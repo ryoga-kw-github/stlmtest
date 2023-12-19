@@ -24,7 +24,7 @@ conversation = ConversationChain(
     memory=memory
 )
 
-st.title("シンプルなチャットUI")
+st.title("QAボット試作")
 
 # チャットボックス
 user_input = st.chat_input("Say something")
