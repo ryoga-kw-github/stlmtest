@@ -25,6 +25,7 @@ conversation = ConversationChain(
 )
 
 st.title("QAボット試作")
+st.text("API利用料がかさむので、なるべくアクセスは控えめにしてくれると嬉しいです。")
 
 # チャットボックス
 user_input = st.chat_input("Say something")
