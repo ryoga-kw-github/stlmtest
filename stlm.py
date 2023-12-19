@@ -8,12 +8,14 @@ from langchain.schema import HumanMessage
 from langchain.schema import AIMessage
 
 # memoryオブジェクトをキャッシュする関数を定義
-@st.cache(allow_output_mutation=True)
 def get_memory():
     return ConversationBufferWindowMemory(k=5, return_messages=True)
 
 # キャッシュされたmemoryオブジェクトを取得
-memory = get_memory()
+if 'memory' not in st.session_state:
+    st.session_state.memory = get_memory() # memoryがsession_stateに追加されていない場合、get_memoryで初期化
+
+memory = st.session_state.memory # session_stateからmemoryを取得
 
 llm = ChatOpenAI(temperature=1,model_name="gpt-3.5-turbo-1106")
 
